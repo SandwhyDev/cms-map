@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <canvas
+      id="myCanvas"
+      width="500"
+      height="500"
+      style="border: 1px solid #d3d3d3"
+    >
+      Your browser does not support the HTML canvas tag.</canvas
+    >
+
+    <script>
+      var c = document.getElementById("myCanvas");
+      var ctx = c.getContext("2d");
+
+      function drawPolygon(context, points = []) {
+        context.fillStyle = "#ff9"; // Mengatur warna isian menjadi kuning
+        context.strokeStyle = "black"; // Mengatur warna garis menjadi hitam
+
+        context.beginPath();
+        context.moveTo(points[0].x, points[0].y);
+        for (let i = 1; i < points.length; i++) {
+          context.lineTo(points[i].x, points[i].y);
+        }
+        context.closePath();
+        context.fill();
+        context.stroke();
+      }
+
+      drawPolygon([
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+        { x: 100, y: 50 },
+        { x: 50, y: 50 },
+        { x: 50, y: 100 },
+        { x: 0, y: 100 },
+      ]);
+
+      drawPolygon([
+        { x: 200, y: 0 },
+        { x: 300, y: 0 },
+        { x: 300, y: 100 },
+        { x: 250, y: 100 },
+        { x: 250, y: 50 },
+        { x: 200, y: 50 },
+      ]);
+
+      drawPolygon([
+        { x: 0, y: 200 },
+        { x: 0, y: 300 },
+        { x: 100, y: 300 },
+        { x: 100, y: 250 },
+        { x: 50, y: 250 },
+        { x: 50, y: 200 },
+      ]);
+
+      drawPolygon([
+        { x: 300, y: 200 },
+        { x: 300, y: 300 },
+        { x: 200, y: 300 },
+        { x: 200, y: 250 },
+        { x: 250, y: 250 },
+        { x: 250, y: 200 },
+      ]);
+    </script>
+  </body>
+</html>

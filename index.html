@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <title>Maps</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jsqr"></script>
+    <script
+      src="https://kit.fontawesome.com/bd4cbc9eb2.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body id="body" class="">
+    <div class="flex">
+      <!-- form edit tenant  -->
+      <div
+        class="flex flex-col w-96 h-screen p-5 bg-green-500 justify-between gap-2 overflow-y-scroll"
+      >
+        <!-- pameran  -->
+        <div class="group space-y-2">
+          <h1 id="idPameran" class="hidden"></h1>
+          <h1 id="idLocation" class="hidden"></h1>
+          <label for="selectPameran" class="uppercase">pameran</label>
+          <!-- <div
+            class="border border-black rounded focus:outline-none p-2 bg-white h-8 w-full relative flex items-center"
+          >
+            <input
+              type="text"
+              name="selectPameran"
+              id="selectPameran"
+              class="w-full focus:outline-none"
+            />
+            <div
+              class="h-8 px-1 flex items-center justify-center cursor-pointer"
+            >
+              <i class="fa fa-angle-down" style="font-size: 20px"></i>
+            </div>
+          </div> -->
+          <select
+            name="selectPameran"
+            class="border border-black rounded focus:outline-none py-1 px-2 w-full"
+            id="selectPameran"
+          ></select>
+          <input
+            type="text"
+            name="pameran"
+            id="pameran"
+            class="rounded focus:outline-none py-1 px-2 w-full"
+            placeholder="Add New"
+          />
+          <div
+            id="addNewPameran"
+            class="w-full bg-blue-500 py-1 px-2 rounded uppercase text-white text-center hidden cursor-pointer"
+          >
+            Add New
+          </div>
+        </div>
+
+        <!-- location -->
+        <div class="group space-y-2">
+          <label for="selectLocation" class="uppercase">location</label>
+          <select
+            name="selectlocation"
+            class="border border-black rounded focus:outline-none py-1 px-2 w-full"
+            id="selectLocation"
+          ></select>
+          <input
+            type="text"
+            name="locationPameran"
+            id="locationPameran"
+            class="rounded focus:outline-none py-1 px-2 w-full"
+            placeholder="Add New"
+          />
+          <div
+            id="addNewLocation"
+            class="w-full bg-blue-500 py-1 px-2 rounded uppercase text-white text-center hidden cursor-pointer"
+          >
+            Add New
+          </div>
+        </div>
+
+        <!-- WIDTH CANVAS  -->
+        <div class="group space-y-1">
+          <label for="widthCanvas" class="uppercase">width canvas</label>
+          <input
+            type="text"
+            name="widthCanvas"
+            id="widthCanvas"
+            class="focus:outline w-full px-2 py-1 rounded"
+          />
+        </div>
+
+        <!-- HEIGHT CANVAS  -->
+        <div class="group space-y-1">
+          <label for="heightCanvas" class="uppercase">height Canvas</label>
+          <input
+            type="text"
+            name="heightCanvas"
+            id="heightCanvas"
+            class="focus:outline w-full px-2 py-1 rounded"
+          />
+        </div>
+
+        <!-- data tenant  -->
+        <div class="w-full space-y-2 rounded uppercase">
+          <!-- data tenant  -->
+          <div class="flex justify-between items-center">
+            <label for="dataTenant">data tenant JSON</label>
+            <i
+              id="copyData"
+              class="fa fa-copy text-gray-200 cursor-pointer"
+            ></i>
+          </div>
+
+          <textarea
+            name="dataTenant"
+            id="dataTenant"
+            class="w-full focus:outline p-5 rounded"
+            rows="8"
+          ></textarea>
+        </div>
+
+        <!-- data street  -->
+        <div class="w-full space-y-2 rounded uppercase">
+          <div class="flex justify-between items-center">
+            <label for="dataStreet">data street</label>
+            <i
+              id="copyDataStreet"
+              class="fa fa-copy text-gray-200 cursor-pointer"
+            ></i>
+          </div>
+
+          <textarea
+            name="dataStreet"
+            id="dataStreet"
+            class="w-full focus:outline p-5 rounded"
+            rows="7"
+          ></textarea>
+        </div>
+
+        <div class="w-full space-y-2">
+          <button
+            id="editButton"
+            class="w-full bg-blue-300 p-1 uppercase rounded"
+          >
+            edit
+          </button>
+          <!-- <button id="reset" class="w-full bg-red-500 p-1 text-white">
+            Reset
+          </button> -->
+        </div>
+      </div>
+
+      <!-- CANVAS -->
+      <div
+        id="containerCanvas"
+        class="py-20 w-full h-screen overflow-scroll space-y-2 relative"
+      >
+        <!-- SEARCH  -->
+        <div class="w-96 px-5 h-12 flex items-center fixed top-6 z-50 left-66">
+          <input
+            type="text"
+            name="search"
+            id="search"
+            placeholder="Search"
+            class="border border-black w-full p-2 rounded focus:outline-none"
+          />
+        </div>
+
+        <div class="flex px-5 gap-2">
+          <button id="modeTenant" class="px-2 py-1 border border-black rounded">
+            Tenant
+          </button>
+
+          <button id="modeStreet" class="px-2 py-1 border border-black rounded">
+            Street
+          </button>
+
+          <div
+            id="startFinding"
+            class="px-2 py-1 border border-black rounded cursor-pointer"
+          >
+            Start Finding
+          </div>
+        </div>
+
+        <div class="px-5">
+          <canvas
+            id="gCanvas"
+            width="500"
+            height="500"
+            class="overflow-scroll"
+            style="transform: rotateX('20deg')"
+          >
+          </canvas>
+        </div>
+
+        <div
+          id="containerHandleData"
+          class="w-full h-screen fixed -top-2 py-20 bg-white overflow-y-scroll hidden"
+        ></div>
+
+        <div
+          id="batalSearch"
+          class="w-full h-10 fixed bottom-0 bg-red-500 hidden flex items-center justify-center cursor-pointer"
+        >
+          <i class="fa-solid fa-x text-xl font-bold"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- form edit tenant -->
+    <div
+      id="containerEdit"
+      class="w-screen h-screen fixed top-0 left-0 bg-black/50 flex items-center justify-center p-10 hidden"
+    >
+      <form
+        id="form"
+        class="space-y-2 bg-white p-5 w-96 h-[500px] overflow-y-scroll rounded relative"
+      >
+        <div
+          id="cancelEdit"
+          class="absolute top-2 right-3 bg-red-500 rounded-full font-bold p-2 w-10 h-10 flex items-center justify-center cursor-pointer"
+        >
+          <i class="fa-solid fa-x"></i>
+        </div>
+        <!-- nama tenant -->
+        <div class="group flex flex-col gap-1">
+          <label for="namaTenant" class="uppercase">nama tenant</label>
+          <input
+            type="text"
+            name="namaTenant"
+            id="namaTenant"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- code tenant -->
+        <div class="group flex flex-col gap-1">
+          <label for="codeTenant" class="uppercase">code tenant</label>
+          <input
+            type="text"
+            name="codeTenant"
+            id="codeTenant"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- categori tenant  -->
+        <div class="group flex flex-col gap-1">
+          <label for="categoriTenant" class="uppercase">categori tenant</label>
+          <select
+            name="categoriTenant"
+            id="categoriTenant"
+            class="border border-black rounded focus:outline-none py-1 px-2 uppercase"
+          >
+            <option value="tenant" selected>tenant</option>
+            <option value="toilet">toilet</option>
+            <option value="vip">vip</option>
+            <option value="kantin">kantin</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+
+        <!-- color tenant  -->
+        <div class="group flex flex-col gap-1">
+          <label for="colorTenant" class="uppercase">color tenant</label>
+          <div class="flex gap-2">
+            <input
+              type="color"
+              name="colorTenant"
+              id="colorTenant"
+              class="border border-black rounded focus:outline-none py-1 px-2"
+            />
+            <input
+              type="text"
+              id="resultColorTenant"
+              class="border border-black rounded focus:outline-none py-1 px-2"
+            />
+          </div>
+        </div>
+
+        <!-- type tenant  -->
+        <div class="group flex flex-col gap-1">
+          <label for="typeTenant" class="uppercase">type tenant</label>
+          <select
+            name="typeTenant"
+            id="typeTenant"
+            class="border border-black rounded focus:outline-none py-1 px-2 uppercase"
+          >
+            <option value="kotak" selected>kotak</option>
+            <option value="l_down">l down</option>
+            <option value="l_up">l up</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+
+        <!-- width -->
+        <div class="group flex flex-col gap-1">
+          <label for="widthTenant" class="uppercase">width</label>
+          <input
+            type="number"
+            name="widthTenant"
+            id="widthTenant"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- height  -->
+        <div class="group flex flex-col gap-1">
+          <label for="heightTenant" class="uppercase">height</label>
+          <input
+            type="number"
+            name="heightTenant"
+            id="heightTenant"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- width2 -->
+        <div id="groupwidth2Tenant" class="group flex flex-col gap-1 hidden">
+          <label for="width2Tenant" class="uppercase">width 2</label>
+          <input
+            type="number"
+            name="width2Tenant"
+            id="width2Tenant"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- height2 -->
+        <div id="groupheight2Tenant" class="group flex flex-col gap-1 hidden">
+          <label for="height2Tenant" class="uppercase">height 2</label>
+          <input
+            type="number"
+            name="height2Tenant"
+            id="height2Tenant"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- X2 -->
+        <div id="groupx2Tenant" class="group flex flex-col gap-1 hidden">
+          <label for="x2Tenant" class="uppercase">x 2</label>
+          <input
+            type="number"
+            name="x2Tenant"
+            id="x2Tenant"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+        <!-- y2 -->
+        <div id="groupy2Tenant" class="group flex flex-col gap-1 hidden">
+          <label for="y2Tenant" class="uppercase">y 2</label>
+          <input
+            type="number"
+            name="y2Tenant"
+            id="y2Tenant"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- point x  -->
+        <div class="group flex flex-col gap-1">
+          <label for="pointY" class="uppercase">Point X</label>
+          <input
+            type="number"
+            name="pointX"
+            id="pointX"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- point y  -->
+        <div class="group flex flex-col gap-1">
+          <label for="pointY" class="uppercase">Point Y</label>
+          <input
+            type="number"
+            name="pointY"
+            id="pointY"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- link image  -->
+        <div class="group flex flex-col gap-1">
+          <label for="linkImage" class="uppercase">Link Image</label>
+          <input
+            type="text"
+            name="linkImage"
+            id="linkImage"
+            placeholder="Link Google Drive"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- preview image  -->
+        <div class="group flex flex-col gap-1">
+          <img
+            id="previewImage"
+            src="https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg"
+            alt="foto tenant"
+            srcset=""
+          />
+        </div>
+
+        <div class="flex gap-2">
+          <button id="submitHapus" class="bg-red-500 p-2 w-full text-white">
+            Hapus
+          </button>
+          <button id="submitEdit" class="bg-green-500 p-2 w-full">EDIT</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- FORM EDIT STREET -->
+    <div
+      id="containerStreetEdit"
+      class="w-screen h-screen fixed top-0 left-0 bg-black/50 flex items-center justify-center p-10 hidden"
+    >
+      <form
+        id="form"
+        class="space-y-2 bg-white p-5 w-96 overflow-y-scroll rounded relative"
+      >
+        <div
+          id="cancelEditStreet"
+          class="absolute top-2 right-3 bg-red-500 rounded-full font-bold p-2 w-10 h-10 flex items-center justify-center cursor-pointer"
+        >
+          <i class="fa-solid fa-x"></i>
+        </div>
+        <!-- TITIK AWAL -->
+        <div class="group flex flex-col gap-1">
+          <label for="titikAwal" class="uppercase">TITIK AWAL</label>
+          <input
+            type="number"
+            name="titikAwal"
+            id="titikAwal"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- position  -->
+        <div class="group flex flex-col gap-1">
+          <label for="position" class="uppercase">position</label>
+          <select
+            name="position"
+            id="position"
+            class="border border-black rounded focus:outline-none py-1 px-2 uppercase"
+          >
+            <option value="x" selected>x</option>
+            <option value="y">y</option>
+          </select>
+        </div>
+
+        <!-- tambah kotak -->
+        <div class="group flex flex-col gap-1">
+          <label for="tambahKotak" class="uppercase">tambah kotak</label>
+          <input
+            type="number"
+            name="tambahKotak"
+            id="tambahKotak"
+            class="border border-black rounded focus:outline-none py-1 px-2"
+          />
+        </div>
+
+        <!-- direction  -->
+        <div class="group flex flex-col gap-1">
+          <label for="direction" class="uppercase">direction</label>
+          <select
+            name="direction"
+            id="direction"
+            class="border border-black rounded focus:outline-none py-1 px-2 uppercase"
+          >
+            <option value="all" selected>all</option>
+            <option value="up">up</option>
+            <option value="down">down</option>
+            <option value="right">right</option>
+            <option value="left">left</option>
+          </select>
+        </div>
+
+        <div class="flex gap-2">
+          <button
+            id="submitHapusStreet"
+            class="bg-red-500 p-2 w-full text-white"
+          >
+            Hapus
+          </button>
+          <button id="submitEditStreet" class="bg-green-500 p-2 w-full">
+            EDIT
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- LOADING SCREEN  -->
+    <div
+      id="loading"
+      class="w-screen h-screen bg-black/50 flex items-center justify-center fixed top-0 left-0 text-white font-bold z-50"
+    >
+      <h1>Loading...</h1>
+    </div>
+
+    <script src="/src/handleClick.js"></script>
+    <script src="./src/api/pameranApi.js"></script>
+    <script src="/src/handleFunction.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
